@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cp2pdf"
+version = "1.0.0"
+description = "A professional CLI tool to convert Competitive Programming templates to a PDF Team Reference Document."
+readme = "README.md"
+requires-python = ">=3.7"
+license = { text = "MIT" }
+authors = [
+    { name = "Ahmed Salama" }
+]
+
+dependencies = [] # Curses is part of the standard library on Unix!
+
+[project.scripts]
+cp2pdf = "cp2pdf.main:run_app"
