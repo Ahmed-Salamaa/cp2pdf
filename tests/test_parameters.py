@@ -17,7 +17,7 @@ class TestParameters(unittest.TestCase):
             f.write("int main() {}")
             
         self.dummy_files = [dummy_file_path]
-        self.processed = []
+        self.processed = [dummy_file_path]
         self.target_dir = self.temp_dir.name
 
     def tearDown(self):
@@ -102,9 +102,11 @@ class TestParameters(unittest.TestCase):
             with open(self.output_path, 'r') as f:
                 content = f.read()
                 if style == "Black Border (No Background)":
-                    self.assertIn("backgroundcolor=\\color{white}", content)
+                    self.assertIn("colback=white", content)
+                    self.assertIn("colframe=black", content)
                 else:
-                    self.assertIn("backgroundcolor=\\color{codebg}", content)
+                    self.assertIn("colback=codebg", content)
+                    self.assertIn("colframe=codebg", content)
 
 if __name__ == '__main__':
     unittest.main()

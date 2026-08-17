@@ -20,11 +20,11 @@ def generate_master_tex(selected_files, processed_files, target_dir, output_path
     elif heading_style == "Normal":
         heading_fmt = "\\normalfont"
         
-    lst_style = ""
+    tcb_style = ""
     if "Black Border" in code_style:
-        lst_style = "backgroundcolor=\\color{white},\n    frame=single,\n    rulecolor=\\color{black},"
+        tcb_style = "colback=white, colframe=black, boxrule=0.5pt,"
     else:
-        lst_style = "backgroundcolor=\\color{codebg},\n    frame=single,\n    rulecolor=\\color{codebg},"
+        tcb_style = "colback=codebg, colframe=codebg, boxrule=0pt,"
         
     page_num_cmd = "\\fancyfoot[C]{\\thepage}"
     if page_number_location == "Bottom Right": page_num_cmd = "\\fancyfoot[R]{\\thepage}"
@@ -57,7 +57,9 @@ def generate_master_tex(selected_files, processed_files, target_dir, output_path
 \usepackage{{multicol}}
 \usepackage{{listings}}
 \usepackage{{xcolor}}
-\usepackage[{page_format}, {orientation.lower()}, margin={margin}, top={margin}, bottom={margin}, includehead, includefoot, headsep={headsep_pt}pt, footskip={footskip_pt}pt]{{geometry}}
+\usepackage[most]{{tcolorbox}}
+\tcbuselibrary{{listings, breakable}}
+\usepackage[{page_format}, {orientation.lower()}, margin={margin}, top={margin}, bottom={margin}, includehead, includefoot, headsep={headsep_pt}pt, footskip={footskip_pt}pt, heightrounded]{{geometry}}
 \usepackage{{hyperref}}
 \usepackage{{pdfpages}}
 \usepackage{{fancyhdr}}
@@ -132,7 +134,6 @@ def generate_master_tex(selected_files, processed_files, target_dir, output_path
     stringstyle=\color{{codestring}},
     commentstyle=\color{{codecomment}}\itshape,
     morekeywords={{int, float, double, bool, void, char, auto, long, const, struct, class, unsigned, template, typename}},
-    {lst_style}
     showspaces=false,
     showstringspaces=false,
     showtabs=false,
@@ -257,7 +258,14 @@ def generate_master_tex(selected_files, processed_files, target_dir, output_path
                             else:
                                 f.write(f"\\subsubsection{{{clean_file_base}}}\n")
                         
-                        f.write(f"\\lstinputlisting[title=\\textbf{{{clean_name}}}]{{{proc_file}}}\n")
+                        f.write(f"\\tcbinputlisting{{\n")
+                        f.write(f"    listing file={{{proc_file}}},\n")
+                        f.write(f"    title=\\textbf{{{clean_name}}},\n")
+                        f.write(f"    breakable,\n")
+                        f.write(f"    left=1mm, right=1mm, top=1mm, bottom=1mm,\n")
+                        f.write(f"    {tcb_style}\n")
+                        f.write(f"    listing only\n")
+                        f.write(f"}}\n")
 
         write_tree(tree, depth=1)
         if columns > 1:
