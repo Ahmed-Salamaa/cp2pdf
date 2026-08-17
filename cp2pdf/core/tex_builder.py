@@ -21,10 +21,13 @@ def generate_master_tex(selected_files, processed_files, target_dir, output_path
         heading_fmt = "\\normalfont"
         
     tcb_style = ""
+    lst_global_style = ""
     if "Black Border" in code_style:
         tcb_style = "colback=white, colframe=black, colbacktitle=white, coltitle=black, titlerule=0.5pt, boxrule=0.5pt,"
+        lst_global_style = "backgroundcolor=\\color{white},\n    frame=single,\n    rulecolor=\\color{black},"
     else:
         tcb_style = "colback=codebg, colframe=codebg, colbacktitle=codebg, coltitle=black, boxrule=0pt,"
+        lst_global_style = "backgroundcolor=\\color{codebg},\n    frame=single,\n    rulecolor=\\color{codebg},"
         
     page_num_cmd = "\\fancyfoot[C]{\\thepage}"
     if page_number_location == "Bottom Right": page_num_cmd = "\\fancyfoot[R]{\\thepage}"
@@ -134,6 +137,7 @@ def generate_master_tex(selected_files, processed_files, target_dir, output_path
     stringstyle=\color{{codestring}},
     commentstyle=\color{{codecomment}}\itshape,
     morekeywords={{int, float, double, bool, void, char, auto, long, const, struct, class, unsigned, template, typename}},
+    {lst_global_style}
     showspaces=false,
     showstringspaces=false,
     showtabs=false,
@@ -264,7 +268,8 @@ def generate_master_tex(selected_files, processed_files, target_dir, output_path
                         f.write(f"    breakable,\n")
                         f.write(f"    left=1mm, right=1mm, top=1mm, bottom=1mm,\n")
                         f.write(f"    {tcb_style}\n")
-                        f.write(f"    listing only\n")
+                        f.write(f"    listing only,\n")
+                        f.write(f"    listing options={{frame=none, backgroundcolor={{}}}}\n")
                         f.write(f"}}\n")
 
         write_tree(tree, depth=1)

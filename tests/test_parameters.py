@@ -107,11 +107,13 @@ class TestParameters(unittest.TestCase):
                     self.assertIn("colbacktitle=white", content)
                     self.assertIn("coltitle=black", content)
                     self.assertIn("titlerule=0.5pt", content)
+                    self.assertIn("backgroundcolor=\\color{white}", content)
                 else:
                     self.assertIn("colback=codebg", content)
                     self.assertIn("colframe=codebg", content)
                     self.assertIn("colbacktitle=codebg", content)
                     self.assertIn("coltitle=black", content)
+                    self.assertIn("backgroundcolor=\\color{codebg}", content)
 
 if __name__ == '__main__':
     unittest.main()
