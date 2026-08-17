@@ -22,9 +22,9 @@ def generate_master_tex(selected_files, processed_files, target_dir, output_path
         
     tcb_style = ""
     if "Black Border" in code_style:
-        tcb_style = "colback=white, colframe=black, boxrule=0.5pt,"
+        tcb_style = "colback=white, colframe=black, colbacktitle=white, coltitle=black, titlerule=0.5pt, boxrule=0.5pt,"
     else:
-        tcb_style = "colback=codebg, colframe=codebg, boxrule=0pt,"
+        tcb_style = "colback=codebg, colframe=codebg, colbacktitle=codebg, coltitle=black, boxrule=0pt,"
         
     page_num_cmd = "\\fancyfoot[C]{\\thepage}"
     if page_number_location == "Bottom Right": page_num_cmd = "\\fancyfoot[R]{\\thepage}"
