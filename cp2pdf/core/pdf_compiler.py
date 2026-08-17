@@ -18,7 +18,7 @@ def compile_pdf(tex_file):
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
             cwd=os.path.dirname(tex_file),
-            check=True
+            check=False
         )
         
         # Second Pass (Builds TOC with correct page numbers)
@@ -28,7 +28,7 @@ def compile_pdf(tex_file):
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
             cwd=os.path.dirname(tex_file),
-            check=True
+            check=False
         )
         
         # Third Pass (Resolves all references and multicol TOC issues)
@@ -38,15 +38,15 @@ def compile_pdf(tex_file):
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
             cwd=os.path.dirname(tex_file),
-            check=True
+            check=False
         )
         
-        print(f"Successfully compiled {tex_file.replace('.tex', '.pdf')}")
+        if os.path.exists(tex_file.replace('.tex', '.pdf')):
+            print(f"Successfully compiled {tex_file.replace('.tex', '.pdf')}")
+        else:
+            print("Warning: pdflatex encountered fatal errors and could not generate a PDF.")
+            print("Please check for invalid UTF-8 characters or syntax errors in your files.")
         
     except FileNotFoundError:
         print("Error: 'pdflatex' is not installed or not in PATH.")
         print("Please install a LaTeX distribution (like TeX Live).")
-    except subprocess.CalledProcessError:
-        print("Warning: pdflatex encountered errors during compilation.")
-        print("If you selected a custom font (like Libertinus), ensure you have 'texlive-fontsextra' installed (e.g. pacman -S texlive-fontsextra).")
-        print("A PDF might still have been generated, but please check the logs.")

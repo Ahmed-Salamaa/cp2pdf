@@ -26,7 +26,7 @@ def run_config_menu():
             "format": ["Both PDF and LaTeX", "PDF Only", "LaTeX Only"],
             "split": ["Yes (Docs & Code)", "No (Single Document)"],
             "font": ["Computer Modern (Default)", "Libertinus", "Times", "Palatino"],
-            "font_size": ["10pt", "11pt", "12pt", "9pt", "14pt"],
+            "font_size": [f"{i}pt" for i in range(9, 41)],
             "heading_style": ["Bold", "Italic", "Small Caps", "Normal"],
             "page_format": ["a4paper", "letterpaper", "b5paper"],
             "margin": ["1.5cm (Normal)", "1.0cm (Narrow)", "2.0cm (Wide)", "0.5cm (Minimal)"],

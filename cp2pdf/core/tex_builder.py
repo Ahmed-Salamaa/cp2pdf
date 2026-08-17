@@ -28,8 +28,11 @@ def generate_master_tex(selected_files, processed_files, target_dir, output_path
         
     with open(output_path, 'w', encoding='utf-8') as f:
         # --- LaTeX Preamble ---
-        f.write(fr"""\documentclass[{font_size}]{{extarticle}}
+        f.write(fr"""\documentclass{{extarticle}}
 \usepackage[utf8]{{inputenc}}
+\usepackage{{anyfontsize}}
+\usepackage{{scrextend}}
+\changefontsizes{{{font_size}}}
 \usepackage{{amsmath}}
 \usepackage{{amssymb}}
 \usepackage{{longtable}}
