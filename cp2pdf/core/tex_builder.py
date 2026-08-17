@@ -1,6 +1,6 @@
 import os
 
-def generate_master_tex(selected_files, processed_files, target_dir, output_path, title="ICPC Team Reference", page_format="a4paper", orientation="portrait", columns=1, font_choice="Computer Modern (Default)", font_size="10pt", heading_style="Bold", margin="1.5cm", code_style="Light Gray Background"):
+def generate_master_tex(selected_files, processed_files, target_dir, output_path, title="ICPC Team Reference", page_format="a4paper", orientation="portrait", columns=1, font_choice="Computer Modern (Default)", font_size="10pt", heading_style="Bold", margin="1.5cm", code_style="Light Gray Background", page_number_location="Bottom Center"):
     """
     Generates the master LaTeX file containing all the selected files, preserving the exact directory hierarchy.
     """
@@ -26,6 +26,21 @@ def generate_master_tex(selected_files, processed_files, target_dir, output_path
     else:
         lst_style = "backgroundcolor=\\color{codebg},\n    frame=single,\n    rulecolor=\\color{codebg},"
         
+    page_num_cmd = "\\fancyfoot[C]{\\thepage}"
+    if page_number_location == "Bottom Right": page_num_cmd = "\\fancyfoot[R]{\\thepage}"
+    elif page_number_location == "Bottom Left": page_num_cmd = "\\fancyfoot[L]{\\thepage}"
+    elif page_number_location == "Top Center": page_num_cmd = "\\fancyhead[C]{\\thepage}"
+    elif page_number_location == "Top Right": page_num_cmd = "\\fancyhead[R]{\\thepage}"
+    elif page_number_location == "Top Left": page_num_cmd = "\\fancyhead[L]{\\thepage}"
+        
+    try:
+        f_size = float(font_size.replace("pt", "").strip())
+    except:
+        f_size = 10.0
+        
+    footskip_pt = max(30.0, f_size * 1.5)
+    headsep_pt = max(20.0, f_size * 1.5)
+
     with open(output_path, 'w', encoding='utf-8') as f:
         # --- LaTeX Preamble ---
         f.write(fr"""\documentclass{{extarticle}}
@@ -42,7 +57,7 @@ def generate_master_tex(selected_files, processed_files, target_dir, output_path
 \usepackage{{multicol}}
 \usepackage{{listings}}
 \usepackage{{xcolor}}
-\usepackage[{page_format}, {orientation}, margin={margin}, top={margin}, bottom={margin}]{{geometry}}
+\usepackage[{page_format}, {orientation.lower()}, margin={margin}, top={margin}, bottom={margin}, includehead, includefoot, headsep={headsep_pt}pt, footskip={footskip_pt}pt]{{geometry}}
 \usepackage{{hyperref}}
 \usepackage{{pdfpages}}
 \usepackage{{fancyhdr}}
@@ -99,7 +114,7 @@ def generate_master_tex(selected_files, processed_files, target_dir, output_path
 % Headers and Footers
 \pagestyle{{fancy}}
 \fancyhf{{}}
-\fancyfoot[C]{{\thepage}}
+{page_num_cmd}
 \renewcommand{{\headrulewidth}}{{0pt}}
 \renewcommand{{\footrulewidth}}{{0pt}}
 
