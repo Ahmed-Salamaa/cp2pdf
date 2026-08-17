@@ -1,5 +1,6 @@
 import curses
 import os
+import shutil
 
 def run_config_menu():
     def ui_loop(stdscr):
@@ -18,11 +19,18 @@ def run_config_menu():
         curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_CYAN)
         curses.init_pair(3, curses.COLOR_GREEN, bg)
         curses.init_pair(4, curses.COLOR_YELLOW, bg)
+        curses.init_pair(5, curses.COLOR_WHITE, curses.COLOR_RED) # For errors
+        
+        missing_pkgs = []
+        if not shutil.which("pandoc"): missing_pkgs.append("pandoc")
+        if not shutil.which("pdflatex"): missing_pkgs.append("pdflatex")
+        if not shutil.which("rsvg-convert"): missing_pkgs.append("rsvg-convert")
         
         # Options definition
         config = {
             "target_dir": ".",
             "output_dir": ".",
+            "cover_title": "ICPC Team Reference",
             "format": ["Both PDF and LaTeX", "PDF Only", "LaTeX Only"],
             "split": ["Yes (Docs & Code)", "No (Single Document)"],
             "font": ["Computer Modern (Default)", "Libertinus", "Times", "Palatino"],
@@ -32,18 +40,21 @@ def run_config_menu():
             "margin": ["1.5cm (Normal)", "1.0cm (Narrow)", "2.0cm (Wide)", "0.5cm (Minimal)"],
             "orientation": ["Portrait", "Landscape"],
             "columns": ["2", "1", "3"],
-            "code_style": ["Black Border (No Background)", "Light Gray Background"]
+            "code_style": ["Black Border (No Background)", "Light Gray Background"],
+            "page_number_location": ["Bottom Center", "Bottom Right", "Bottom Left", "Top Center", "Top Right", "Top Left"]
         }
         
         # Current index in the lists for enum options
         selections = {
             "format": 0, "split": 0, "font": 0, "font_size": 0, "heading_style": 0, 
-            "page_format": 0, "margin": 0, "orientation": 0, "columns": 0, "code_style": 0
+            "page_format": 0, "margin": 0, "orientation": 0, "columns": 0, "code_style": 0, "page_number_location": 0
         }
         
         fields = [
             ("target_dir", "Target Directory"),
             ("output_dir", "Output Directory"),
+            (None, ""),
+            ("cover_title", "Cover Page Title"),
             (None, ""),
             ("format", "Output Format"),
             ("split", "Split Documents"),
@@ -55,6 +66,7 @@ def run_config_menu():
             ("margin", "Page Margins"),
             ("orientation", "Page Orientation"),
             ("columns", "Columns"),
+            ("page_number_location", "Page Number Loc"),
             (None, ""),
             ("code_style", "Code Block Style"),
             (None, ""),
@@ -109,11 +121,16 @@ def run_config_menu():
             attr_header = curses.color_pair(1) | curses.A_BOLD if has_color else curses.A_BOLD
             stdscr.addstr(0, 0, header_text.center(width)[:width], attr_header)
             
+            if missing_pkgs:
+                error_msg = f" ERROR: Missing Required Packages: {', '.join(missing_pkgs)}! "
+                attr_error = curses.color_pair(5) | curses.A_BOLD if has_color else curses.A_REVERSE | curses.A_BOLD
+                stdscr.addstr(1, max(0, (width - len(error_msg)) // 2), error_msg, attr_error)
+            
             for i, (key, label) in enumerate(fields):
                 if key is None:
                     continue
                     
-                screen_y = i + 2
+                screen_y = i + 3 if missing_pkgs else i + 2
                 
                 if key == "BUILD":
                     display_text = f"  {label}"

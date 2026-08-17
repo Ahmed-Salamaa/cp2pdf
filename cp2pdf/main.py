@@ -39,6 +39,8 @@ def run_app():
     
     margin = config["margin"].split(" ")[0]
     code_style = config["code_style"]
+    page_number_location = config.get("page_number_location", "Bottom Center")
+    cover_title = config.get("cover_title", "ICPC Team Reference")
     
     try:
         columns = int(config["columns"])
@@ -80,8 +82,8 @@ def run_app():
             MASTER_TEX_DOCS = os.path.join(temp_env, "master_docs.tex")
             
             print("Generating master LaTeX files...")
-            generate_master_tex(code_files, code_processed, target_dir, MASTER_TEX_CODE, title="ICPC Team Reference - Source Code", page_format=page_format, orientation=orientation, columns=columns, font_choice=font_choice, font_size=font_size, heading_style=heading_style, margin=margin, code_style=code_style)
-            generate_master_tex(doc_files, doc_processed, target_dir, MASTER_TEX_DOCS, title="ICPC Team Reference - Documentation", page_format=page_format, orientation=orientation, columns=columns, font_choice=font_choice, font_size=font_size, heading_style=heading_style, margin=margin, code_style=code_style)
+            generate_master_tex(code_files, code_processed, target_dir, MASTER_TEX_CODE, title=f"{cover_title} - Source Code", page_format=page_format, orientation=orientation, columns=columns, font_choice=font_choice, font_size=font_size, heading_style=heading_style, margin=margin, code_style=code_style, page_number_location=page_number_location)
+            generate_master_tex(doc_files, doc_processed, target_dir, MASTER_TEX_DOCS, title=f"{cover_title} - Documentation", page_format=page_format, orientation=orientation, columns=columns, font_choice=font_choice, font_size=font_size, heading_style=heading_style, margin=margin, code_style=code_style, page_number_location=page_number_location)
             
             if want_pdf:
                 print("Compiling PDFs (this may take a moment)...")
@@ -134,7 +136,7 @@ def run_app():
             processed_files = convert_markdown_files(selected_files, BUILD_DIR)
             
             print("Generating master LaTeX file...")
-            generate_master_tex(selected_files, processed_files, target_dir, MASTER_TEX, title="ICPC Team Reference", page_format=page_format, orientation=orientation, columns=columns, font_choice=font_choice, font_size=font_size, heading_style=heading_style, margin=margin, code_style=code_style)
+            generate_master_tex(selected_files, processed_files, target_dir, MASTER_TEX, title=cover_title, page_format=page_format, orientation=orientation, columns=columns, font_choice=font_choice, font_size=font_size, heading_style=heading_style, margin=margin, code_style=code_style, page_number_location=page_number_location)
             
             if want_pdf:
                 print("Compiling PDF (this may take a moment)...")

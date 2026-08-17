@@ -13,32 +13,35 @@ def compile_pdf(tex_file):
     try:
         # First Pass (Collects TOC data)
         print("Running pdflatex (Pass 1/3)...")
-        subprocess.run(
+        res1 = subprocess.run(
             ["pdflatex", "-interaction=nonstopmode", tex_file],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             cwd=os.path.dirname(tex_file),
-            check=False
+            text=True,
+            errors='replace'
         )
         
         # Second Pass (Builds TOC with correct page numbers)
         print("Running pdflatex (Pass 2/3)...")
-        subprocess.run(
+        res2 = subprocess.run(
             ["pdflatex", "-interaction=nonstopmode", tex_file],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             cwd=os.path.dirname(tex_file),
-            check=False
+            text=True,
+            errors='replace'
         )
         
         # Third Pass (Resolves all references and multicol TOC issues)
         print("Running pdflatex (Pass 3/3)...")
-        subprocess.run(
+        res3 = subprocess.run(
             ["pdflatex", "-interaction=nonstopmode", tex_file],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             cwd=os.path.dirname(tex_file),
-            check=False
+            text=True,
+            errors='replace'
         )
         
         if os.path.exists(tex_file.replace('.tex', '.pdf')):
@@ -46,6 +49,11 @@ def compile_pdf(tex_file):
         else:
             print("Warning: pdflatex encountered fatal errors and could not generate a PDF.")
             print("Please check for invalid UTF-8 characters or syntax errors in your files.")
+            print("\n--- pdflatex Error Output (Pass 3) ---")
+            print(res3.stdout)
+            if res3.stderr:
+                print(res3.stderr)
+            print("--------------------------------------\n")
         
     except FileNotFoundError:
         print("Error: 'pdflatex' is not installed or not in PATH.")
